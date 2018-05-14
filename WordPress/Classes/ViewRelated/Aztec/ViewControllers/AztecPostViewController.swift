@@ -1055,6 +1055,7 @@ extension AztecPostViewController {
     /// an ActionSheet onscreen.
     ///
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        rememberFirstResponder()
         super.present(viewControllerToPresent, animated: flag) {
             if let alert = viewControllerToPresent as? UIAlertController, alert.preferredStyle == .actionSheet {
                 alert.popoverPresentationController?.passthroughViews = nil
@@ -1062,6 +1063,11 @@ extension AztecPostViewController {
 
             completion?()
         }
+    }
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        restoreFirstResponder()
+        super.dismiss(animated: flag, completion: completion)
     }
 }
 
