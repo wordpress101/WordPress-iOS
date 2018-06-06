@@ -330,6 +330,11 @@ extension ShareModularViewController {
     private func showHTMLPicker() {
         print("==== showing HTML")
         print("==== showing HTML")
+        let htmlPicker = ShareHTMLPickerViewController()
+        htmlPicker.onValueChanged = { [weak self] in
+            print("===== something was selected")
+        }
+        navigationController?.pushViewController(htmlPicker, animated: true)
     }
 }
 
