@@ -331,8 +331,8 @@ extension ShareModularViewController {
         print("==== showing HTML")
         print("==== showing HTML")
         let htmlPicker = ShareHTMLPickerViewController()
-        htmlPicker.onValueChanged = { [weak self] in
-            print("===== something was selected")
+        htmlPicker.onValueChanged = { [weak self] index in
+            print("===== something was selected ", index)
         }
         navigationController?.pushViewController(htmlPicker, animated: true)
     }

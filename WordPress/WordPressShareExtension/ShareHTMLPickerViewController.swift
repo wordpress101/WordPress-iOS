@@ -6,7 +6,7 @@ class ShareHTMLPickerViewController: UIViewController {
 
     // MARK: - Public Properties
 
-    @objc var onValueChanged: (() -> Void)?
+    @objc var onValueChanged: ((Int) -> Void)?
 
     /// Apply Bar Button
     ///
@@ -129,6 +129,7 @@ extension ShareHTMLPickerViewController {
 //        if originalTags != tags {
 //            onValueChanged?(tags.joined(separator: ", "))
 //        }
+        //onValueC
         _ = navigationController?.popViewController(animated: true)
     }
 
@@ -148,6 +149,8 @@ extension ShareHTMLPickerViewController {
 extension ShareHTMLPickerViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        onValueChanged?(indexPath.row)
+        applyWasPressed()
     }
 }
 
