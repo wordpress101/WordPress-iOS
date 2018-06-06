@@ -187,7 +187,13 @@ private class HTMLPickerDataSource: NSObject, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: type(of: self).cellIdentifier, for: indexPath)
         WPStyleGuide.Share.configureLoadingTagCell(cell)
-        cell.textLabel?.text = NSLocalizedString("Loading...", comment: "Loading tags")
+        let row = indexPath.row
+        if row == 0 {
+            cell.textLabel?.text = NSLocalizedString("Plain text", comment: "Loading tags")
+        }
+        if row == 1 {
+            cell.textLabel?.text = NSLocalizedString("Quote", comment: "Loading tags")
+        }
         cell.selectionStyle = .none
         return cell
     }

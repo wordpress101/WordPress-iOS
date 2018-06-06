@@ -487,7 +487,7 @@ fileprivate extension ShareModularViewController {
             }
         case ModulesSection.html.rawValue:
             WPStyleGuide.Share.configureModuleCell(cell)
-            cell.textLabel?.text = "Cesar"
+            cell.textLabel?.text = "Import text as"
             cell.accessoryType = .disclosureIndicator
             cell.accessibilityLabel = "Cesar"
         default:
