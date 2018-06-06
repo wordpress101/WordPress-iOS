@@ -326,6 +326,11 @@ extension ShareModularViewController {
         tracks.trackExtensionCategoriesOpened()
         navigationController?.pushViewController(categoriesPicker, animated: true)
     }
+
+    private func showHTMLPicker() {
+        print("==== showing HTML")
+        print("==== showing HTML")
+    }
 }
 
 // MARK: - UITableView DataSource Conformance
@@ -342,14 +347,7 @@ extension ShareModularViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == modulesTableView {
-            switch ModulesSection(rawValue: section)! {
-            case .categories:
-                return 1
-            case .tags:
-                return 1
-            case .summary:
-                return 1
-            }
+            return 1
         } else {
             return rowCountForSites
         }
@@ -482,6 +480,11 @@ fileprivate extension ShareModularViewController {
                 cell.detailTextLabel?.text =  NSLocalizedString("Add tags", comment: "Placeholder text for tags module in share extension.")
                 cell.detailTextLabel?.textColor = WPStyleGuide.grey()
             }
+        case ModulesSection.html.rawValue:
+            WPStyleGuide.Share.configureModuleCell(cell)
+            cell.textLabel?.text = "Cesar"
+            cell.accessoryType = .disclosureIndicator
+            cell.accessibilityLabel = "Cesar"
         default:
             // Summary section
             cell.textLabel?.text            = summaryRowText()
@@ -500,6 +503,8 @@ fileprivate extension ShareModularViewController {
             return false
         case .summary:
             return false
+        case .html:
+            return false
         }
     }
 
@@ -517,6 +522,8 @@ fileprivate extension ShareModularViewController {
             return
         case .summary:
             return
+        case .html:
+            showHTMLPicker()
         }
     }
 
@@ -874,6 +881,7 @@ fileprivate extension ShareModularViewController {
     enum ModulesSection: Int {
         case categories
         case tags
+        case html
         case summary
 
         func headerText() -> String {
@@ -881,6 +889,8 @@ fileprivate extension ShareModularViewController {
             case .categories:
                 return String()
             case .tags:
+                return String()
+            case .html:
                 return String()
             case .summary:
                 return String()
@@ -892,6 +902,8 @@ fileprivate extension ShareModularViewController {
             case .categories:
                 return String()
             case .tags:
+                return String()
+            case .html:
                 return String()
             case .summary:
                 return String()
