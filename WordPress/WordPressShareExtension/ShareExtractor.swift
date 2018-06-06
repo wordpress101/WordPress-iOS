@@ -11,6 +11,21 @@ struct ExtractedShare {
     var selectedText: String
     var images: [UIImage]
 
+    var shouldQuote: Bool? = true
+
+    init(title: String,
+         description: String,
+         url: URL?,
+         selectedText: String,
+         images: [UIImage]) {
+        self.title = title
+        self.description = description
+        self.url = url
+        self.selectedText = selectedText
+        self.images = images
+    }
+
+
     var combinedContentHTML: String {
         var returnString: String
 
@@ -38,7 +53,11 @@ struct ExtractedShare {
                 returnString = "<p>\(rawLink)</p>"
             }
         } else {
-            returnString = "<blockquote><p>\(selectedText)\(readOnText)</p></blockquote>"
+            if shouldQuote! == true {
+                returnString = "<blockquote><p>\(selectedText)\(readOnText)</p></blockquote>"
+            } else {
+                returnString = "<p>\(selectedText)\(readOnText)</p>"
+            }
         }
 
         return returnString

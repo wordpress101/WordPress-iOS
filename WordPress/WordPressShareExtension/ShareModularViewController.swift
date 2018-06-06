@@ -9,6 +9,8 @@ class ShareModularViewController: ShareExtensionAbstractViewController {
     fileprivate var isPublishingPost: Bool = false
     fileprivate var isFetchingCategories: Bool = false
 
+    fileprivate var isHTML: Bool = true
+
     /// StackView container for the tables
     ///
     @IBOutlet fileprivate var verticalStackView: UIStackView!
@@ -158,10 +160,12 @@ class ShareModularViewController: ShareExtensionAbstractViewController {
 
         ShareExtractor(extensionContext: extensionContext)
             .loadShare { share in
-                self.shareData.title = share.title
-                self.shareData.contentBody = share.combinedContentHTML
+                var shareCopy = share
+                shareCopy.shouldQuote = self.isHTML
+                self.shareData.title = shareCopy.title
+                self.shareData.contentBody = shareCopy.combinedContentHTML
 
-                share.images.forEach({ image in
+                shareCopy.images.forEach({ image in
                     if let fileURL = self.saveImageToSharedContainer(image) {
                         self.shareData.sharedImageDict.updateValue(UUID().uuidString, forKey: fileURL)
 
@@ -333,6 +337,14 @@ extension ShareModularViewController {
         let htmlPicker = ShareHTMLPickerViewController()
         htmlPicker.onValueChanged = { [weak self] index in
             print("===== something was selected ", index)
+            if index == 0 {
+                self?.isHTML = false
+            }
+            if index == 1 {
+                self?.isHTML = true
+            }
+
+            self?.loadContentIfNeeded()
         }
         navigationController?.pushViewController(htmlPicker, animated: true)
     }
