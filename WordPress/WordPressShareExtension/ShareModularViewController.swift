@@ -9,8 +9,6 @@ class ShareModularViewController: ShareExtensionAbstractViewController {
     fileprivate var isPublishingPost: Bool = false
     fileprivate var isFetchingCategories: Bool = false
 
-    fileprivate var isHTML: Bool = true
-
     /// StackView container for the tables
     ///
     @IBOutlet fileprivate var verticalStackView: UIStackView!
@@ -160,12 +158,10 @@ class ShareModularViewController: ShareExtensionAbstractViewController {
 
         ShareExtractor(extensionContext: extensionContext)
             .loadShare { share in
-                var shareCopy = share
-                shareCopy.shouldQuote = self.isHTML
-                self.shareData.title = shareCopy.title
-                self.shareData.contentBody = shareCopy.combinedContentHTML
+                self.shareData.title = share.title
+                self.shareData.contentBody = share.combinedContentHTML
 
-                shareCopy.images.forEach({ image in
+                share.images.forEach({ image in
                     if let fileURL = self.saveImageToSharedContainer(image) {
                         self.shareData.sharedImageDict.updateValue(UUID().uuidString, forKey: fileURL)
 
@@ -332,21 +328,20 @@ extension ShareModularViewController {
     }
 
     private func showHTMLPicker() {
-        print("==== showing HTML")
-        print("==== showing HTML")
         let htmlPicker = ShareHTMLPickerViewController()
         htmlPicker.onValueChanged = { [weak self] index in
-            print("===== something was selected ", index)
             if index == 0 {
-                self?.isHTML = false
+                self?.removeBlockQuotes()
             }
-            if index == 1 {
-                self?.isHTML = true
-            }
-
-            self?.loadContentIfNeeded()
         }
         navigationController?.pushViewController(htmlPicker, animated: true)
+    }
+
+    private func removeBlockQuotes() {
+        let oldBody = shareData.contentBody
+        let newBody = oldBody.replacingMatches(of: "<blockquote>", with: "").replacingMatches(of: "</blockquote>", with: "")
+
+        shareData.contentBody = newBody
     }
 }
 
@@ -500,6 +495,7 @@ fileprivate extension ShareModularViewController {
         case ModulesSection.html.rawValue:
             WPStyleGuide.Share.configureModuleCell(cell)
             cell.textLabel?.text = "Import text as"
+            cell.detailTextLabel?.text = "Blockquote"
             cell.accessoryType = .disclosureIndicator
             cell.accessibilityLabel = "Cesar"
         default:
