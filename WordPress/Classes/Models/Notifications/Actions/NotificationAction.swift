@@ -1,4 +1,3 @@
-import MGSwipeTableCell
 
 class DefaultNotificationAction: FormattableContentAction {
     var enabled: Bool
