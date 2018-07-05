@@ -1417,7 +1417,7 @@ private extension NotificationDetailsViewController {
         generator.prepare()
         generator.notificationOccurred(.success)
 
-        let actionContext = ActionContext(block: block, content: content) { [weak self] (request, success) in
+        let actionContext = ActionContext(block: block, content: content, completion: { [weak self] (request, success) in
             if success {
                 let message = NSLocalizedString("Reply Sent!", comment: "The app successfully sent a comment")
                 SVProgressHUD.showDismissibleSuccess(withStatus: message)
@@ -1425,7 +1425,7 @@ private extension NotificationDetailsViewController {
                 generator.notificationOccurred(.error)
                 self?.displayReplyErrorWithBlock(block, content: content)
             }
-        }
+        })
 
         replyAction.execute(context: actionContext)
     }
@@ -1439,14 +1439,14 @@ private extension NotificationDetailsViewController {
         generator.prepare()
         generator.notificationOccurred(.success)
 
-        let actionContext = ActionContext(block: block, content: content) { [weak self] (request, success) in
+        let actionContext = ActionContext(block: block, content: content, completion: { [weak self] (request, success) in
             guard success == false else {
                 return
             }
 
             generator.notificationOccurred(.error)
             self?.displayCommentUpdateErrorWithBlock(block, content: content)
-        }
+        })
 
         editCommentAction.execute(context: actionContext)
     }
