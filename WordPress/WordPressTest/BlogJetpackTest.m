@@ -218,4 +218,15 @@
     XCTAssertEqual(3, [blogService blogCountForAllAccounts]);
 }
 
+- (void)testIsPrivateOnWPComReturnsExpectedValue
+{
+    XCTAssertFalse(self.blog.isPrivateOnWPCom);
+}
+
+- (void)testIsSelfHostedWithCredentialsReturnsExpectedValue
+{
+    XCTAssertFalse(self.blog.isSelfHostedWithCredentials);
+
+}
+
 @end

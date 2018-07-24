@@ -985,6 +985,8 @@
 		D88106F820C0C9A8001D2F00 /* ReaderSavedPostUndoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D88106F620C0C9A8001D2F00 /* ReaderSavedPostUndoCell.xib */; };
 		D88106FA20C0CFEE001D2F00 /* ReaderSaveForLaterRemovedPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88106F920C0CFEE001D2F00 /* ReaderSaveForLaterRemovedPosts.swift */; };
 		D88106FC20C0D4A4001D2F00 /* ReaderSavedPostCellActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88106FB20C0D4A4001D2F00 /* ReaderSavedPostCellActions.swift */; };
+		D888E49A21072FEA007AF463 /* CirculaProgressViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888E49921072FEA007AF463 /* CirculaProgressViewTests.swift */; };
+		D888E49C21073136007AF463 /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888E49B21073136007AF463 /* DateTests.swift */; };
 		D88A6492208D7A0A008AE9BC /* MockStockPhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88A6491208D7A0A008AE9BC /* MockStockPhotosService.swift */; };
 		D88A6494208D7AD0008AE9BC /* DefaultStockPhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88A6493208D7AD0008AE9BC /* DefaultStockPhotosService.swift */; };
 		D88A6496208D7B0B008AE9BC /* NullStockPhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88A6495208D7B0B008AE9BC /* NullStockPhotosService.swift */; };
@@ -2627,6 +2629,8 @@
 		D88106F620C0C9A8001D2F00 /* ReaderSavedPostUndoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReaderSavedPostUndoCell.xib; sourceTree = "<group>"; };
 		D88106F920C0CFEE001D2F00 /* ReaderSaveForLaterRemovedPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderSaveForLaterRemovedPosts.swift; sourceTree = "<group>"; };
 		D88106FB20C0D4A4001D2F00 /* ReaderSavedPostCellActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderSavedPostCellActions.swift; sourceTree = "<group>"; };
+		D888E49921072FEA007AF463 /* CirculaProgressViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirculaProgressViewTests.swift; sourceTree = "<group>"; };
+		D888E49B21073136007AF463 /* DateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTests.swift; sourceTree = "<group>"; };
 		D88A6491208D7A0A008AE9BC /* MockStockPhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStockPhotosService.swift; sourceTree = "<group>"; };
 		D88A6493208D7AD0008AE9BC /* DefaultStockPhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStockPhotosService.swift; sourceTree = "<group>"; };
 		D88A6495208D7B0B008AE9BC /* NullStockPhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStockPhotosService.swift; sourceTree = "<group>"; };
@@ -4005,6 +4009,8 @@
 		5D7A577D1AFBFD7C0097C028 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D888E49B21073136007AF463 /* DateTests.swift */,
+				D888E49921072FEA007AF463 /* CirculaProgressViewTests.swift */,
 				D848CC1620FF38EA00A9038F /* FormattableCommentRangeTests.swift */,
 				D848CC1420FF33FC00A9038F /* NotificationContentRangeTests.swift */,
 				D800D87B20999CA200E7C7E5 /* SearchMenuItemCreatorTests.swift */,
@@ -8435,6 +8441,7 @@
 				D81C2F5E20F88CE5002AE1F1 /* MarkAsSpamActionTests.swift in Sources */,
 				D848CC1520FF33FC00A9038F /* NotificationContentRangeTests.swift in Sources */,
 				E1C9AA561C10427100732665 /* MathTest.swift in Sources */,
+				D888E49C21073136007AF463 /* DateTests.swift in Sources */,
 				93A379EC19FFBF7900415023 /* KeychainTest.m in Sources */,
 				D800D874209997DB00E7C7E5 /* FollowingMenuItemCreatorTests.swift in Sources */,
 				E1A7CA4B1CC9FD7800373E06 /* StoreCoordinatorTests.swift in Sources */,
@@ -8458,6 +8465,7 @@
 				B5C0CF3F204DB92F00DB0362 /* NotificationReplyStoreTests.swift in Sources */,
 				D800D87620999AE700E7C7E5 /* DiscoverMenuItemCreatorTests.swift in Sources */,
 				E15027651E03E54100B847E3 /* PinghubTests.swift in Sources */,
+				D888E49A21072FEA007AF463 /* CirculaProgressViewTests.swift in Sources */,
 				E1B642131EFA5113001DC6D7 /* ModelTestHelper.swift in Sources */,
 				B566EC751B83867800278395 /* NSMutableAttributedStringTests.swift in Sources */,
 				E6B9B8AF1B94FA1C0001B92F /* ReaderStreamViewControllerTests.swift in Sources */,
