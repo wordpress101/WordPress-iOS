@@ -72,62 +72,6 @@
             BlueprintName = "WordPressTodayWidget"
             ReferencedContainer = "container:WordPress.xcodeproj">
          </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "931CFFC71EBCB016005E6BB4"
-            BuildableName = "WordPressComStatsiOS.framework"
-            BlueprintName = "WordPressComStatsiOS"
-            ReferencedContainer = "container:../WordPressComStatsiOS/WordPressComStatsiOS.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E12F96E81FBC67AC00329E2E"
-            BuildableName = "WordPressFlux.framework"
-            BlueprintName = "WordPressFlux"
-            ReferencedContainer = "container:../WordPressFlux/WordPressFlux.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3F7965836F9CA8914B9E7E40934F17C"
-            BuildableName = "AutomatticTracks.framework"
-            BlueprintName = "Automattic-Tracks-iOS"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "43A9405765A702E07D62C98C2ACED93A"
-            BuildableName = "WordPressKit.framework"
-            BlueprintName = "WordPressKit"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8E779F7E7794F5A0DA031809D0013BB0"
-            BuildableName = "WordPressShared.framework"
-            BlueprintName = "WordPressShared"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A8F5483FE224C58D2E622472C7DD8A4D"
-            BuildableName = "Aztec.framework"
-            BlueprintName = "WordPress-Aztec-iOS"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C7B7AF47AF86431C0D870AFCC80AB5A"
-            BuildableName = "WordPressEditor.framework"
-            BlueprintName = "WordPress-Editor-iOS"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E9175D044F78904D665F996DC11B6660"
-            BuildableName = "WordPressUI.framework"
-            BlueprintName = "WordPressUI"
-            ReferencedContainer = "container:../Pods/Pods.xcodeproj">
-         </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
