@@ -72,6 +72,20 @@
             BlueprintName = "WordPressTodayWidget"
             ReferencedContainer = "container:WordPress.xcodeproj">
          </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "931CFFC71EBCB016005E6BB4"
+            BuildableName = "WordPressComStatsiOS.framework"
+            BlueprintName = "WordPressComStatsiOS"
+            ReferencedContainer = "container:../WordPressComStatsiOS/WordPressComStatsiOS.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E12F96E81FBC67AC00329E2E"
+            BuildableName = "WordPressFlux.framework"
+            BlueprintName = "WordPressFlux"
+            ReferencedContainer = "container:../WordPressFlux/WordPressFlux.xcodeproj">
+         </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
