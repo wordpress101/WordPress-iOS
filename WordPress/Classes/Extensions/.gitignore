@@ -1,0 +1,5 @@
+NSAttributedString+Helpers.swift
+NSAttributedString+StyledHTML.swift
+NSAttributedStringKey+Conversion.swift
+NSCalendar+Helpers.swift
+NSFetchedResultsController+Helpers.swift
