@@ -1,0 +1,9 @@
+github "wordpress-mobile/WordPress-iOS" "eb5a157ff67197609390683fbf1f480d47165329"
+WordPress/Classes/Extensions/NSAttributedString+Helpers.swift
+WordPress/Classes/Extensions/NSAttributedString+StyledHTML.swift
+WordPress/Classes/Extensions/NSAttributedStringKey+Conversion.swift
+
+github "wordpress-mobile/WordPress-iOS" "10.5.0.0"
+WordPress/Classes/Extensions/NSCalendar+Helpers.swift
+WordPress/Classes/Extensions/NSFetchedResultsController+Helpers.swift
+

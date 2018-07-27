@@ -1,0 +1,262 @@
+#!/usr/bin/env ruby
+
+require "open3"
+
+class String
+  def colorize(color_code)
+    "\e[#{color_code}m#{self}\e[0m"
+  end
+
+  def darkGray
+  	colorize(30)
+  end
+
+  def red
+    colorize(31)
+  end
+
+  def green
+    colorize(32)
+  end
+
+  def yellow
+    colorize(33)
+  end
+
+  def blue
+    colorize(34)
+  end
+
+  def pink
+    colorize(35)
+  end
+
+  def light_blue
+    colorize(36)
+  end
+
+  def lightGray
+  	colorize(37)
+  end
+end
+
+class Downloader
+
+	DependenciesFileName = "ahoi.files"
+	URLElementSeparator = "/"
+
+	def initialize(logger)
+		@logger = logger
+		@resolver = Resolver.new @logger
+	end
+
+	def getDependencies
+		File.open(DependenciesFileName).each_line do |line|
+			strippedLine = line.strip
+
+			if strippedLine.length == 0 
+				next
+			end
+
+			words = strippedLine.split(/\s(?=(?:[^"]|"[^"]*")*$)/).map { |word| word.delete("\"") }
+
+			processWords words
+		end
+
+		@resolver.writeChecksums
+	end
+
+	def switchToRepo repo, branchCommitTag
+		@logger.putsProcessStart "Downloading dependencies from repo " + repo + " (at " + branchCommitTag + ")"
+
+		@servicePath = "https://raw.githubusercontent.com"
+		@repo = repo
+		@branchCommitTag = branchCommitTag
+	end
+
+	def update filaname
+		#resolver = Resolver.new verbose
+		#resolver.resolve
+	end
+
+	def download filedir, filename
+		fullPath = [@servicePath, @repo, @branchCommitTag, filedir, filename].join(URLElementSeparator).delete(" ")
+		command = "curl --fail -k " + fullPath
+
+		Open3.popen3(command) do |stdin, stdout, stderr, thread|
+			unless thread.value.success? then
+				@logger.putsError "Failed to download " + fullPath
+				@logger.putsVerbose ""
+
+				stderr.each_line { |line|
+					@logger.putsVerbose line
+				}
+
+				exit -1
+			end
+
+			File.open(filename, 'w') { |file|
+				stdout.each_line { |line|
+					file.write(line)
+				}
+			}
+
+			@logger.putsSuccess "Downloaded " + filename
+			@resolver.updateChecksum filename
+		end
+	end
+
+	def process filepath
+		filedir = File.dirname(filepath)
+		filename = File.basename(filepath)
+
+		unless @resolver.verifyChecksum(filename) == false then
+			@logger.putsSuccess "No need to download " + filename
+			return
+		end
+
+		download filedir, filename
+		@resolver.updateChecksum filename
+	end
+
+	def processWords words
+		firstWord = words.first
+
+		if firstWord == "github"
+			arguments = words.drop(1)
+			switchToRepo *arguments
+		else
+			process firstWord
+		end
+	end
+end
+
+class Resolver
+
+	RESOLVE_FILE_NAME = "ahoi.resolved"
+
+	def initialize(logger)
+		@logger = logger
+		@hasChanges = false
+		@checksum = Hash.new
+
+		loadChecksums
+	end
+
+	def loadChecksums
+		begin
+			File.open(RESOLVE_FILE_NAME, 'r') { |file|
+				@logger.putsInfo "Found checksum file: " + RESOLVE_FILE_NAME
+
+				begin
+					file.each { |line|
+						squishedLine = line.split.join(" ")
+						words = squishedLine.split
+						@checksum[words[1]] = line
+					}
+				rescue
+					@logger.putsError "Malformed " + RESOLVE_FILE_NAME + " file will be ignored."
+				end
+			}
+		rescue
+			@logger.putsInfo "No checksum file found.  Will create it."
+		end
+	end
+
+	def checksum filename
+		command = "shasum -a 256 " + filename
+
+		Open3.popen3(command) do |stdin, stdout, stderr, thread|
+			failureMessage = "Could not calculate checksum for " + filename
+
+			unless thread.value.success? then
+				raise failureMessage
+			end
+
+			stdout.each_line do |line|
+				return line
+			end
+
+			raise failureMessage
+		end
+	end
+
+	def verifyChecksum filename
+		begin
+			fileChecksum = checksum filename
+		rescue
+			return false
+		end
+
+		return @checksum[filename] == fileChecksum
+	end
+
+	def updateChecksum filename
+		@hasChanges = true
+
+		begin
+			@checksum[filename] = checksum filename
+		rescue failureMessage
+			# At this point we really expect the file to exist.
+			@logger.putsError failureMessage
+			exit
+		end
+	end
+
+	def writeChecksums
+		unless @hasChanges then
+			return
+		end
+
+		File.open(RESOLVE_FILE_NAME, 'w') { |file|
+			@checksum.each do |key, value|
+				file.write(value)
+			end
+		}
+	end
+end
+
+class Logger
+	verbose = false
+
+	def initialize(verbose)
+		@verbose = verbose
+	end
+
+	def putsVerbose line
+		if @verbose then
+			puts line
+		end
+	end
+
+	def putsInfo line
+		puts "***".lightGray + " [Ahoi] " + "*** ".lightGray + line
+	end
+
+	def putsProcessStart line
+		puts "***".blue + " [Ahoi] " + "*** ".blue + line
+	end
+
+	def putsError line
+		puts "***".red + " [Ahoi] " + "*** ".red + line
+	end
+
+	def putsSuccess line
+		puts "***".green + " [Ahoi] " + "*** ".green + line
+	end
+end
+
+### Script Entry Point
+
+# Default values
+verbose = false
+
+ARGV.each do |argument|
+	if argument == "--verbose" then
+		verbose = true
+	end
+end
+
+logger = Logger.new verbose
+downloader = Downloader.new logger
+downloader.getDependencies
