@@ -56,6 +56,8 @@ extension ReaderRoute: NavigationAction {
             return
         }
 
+        coordinator.source = source
+
         switch self {
         case .root:
             coordinator.showReaderTab()
