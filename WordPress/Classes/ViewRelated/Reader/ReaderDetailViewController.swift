@@ -72,6 +72,8 @@ open class ReaderDetailViewController: UIViewController, UIViewControllerRestora
 
     private let noResultsViewController = NoResultsViewController.controller()
 
+    private let readerLinkRouter = UniversalLinkRouter(routes: UniversalLinkRouter.ReaderRoutes)
+
     @objc var currentPreferredStatusBarStyle = UIStatusBarStyle.lightContent {
         didSet {
             setNeedsStatusBarAppearanceUpdate()
@@ -1167,12 +1169,10 @@ extension ReaderDetailViewController: ReaderCardDiscoverAttributionViewDelegate 
 // MARK: - UITextView/WPRichContentView Delegate Methods
 
 extension ReaderDetailViewController: WPRichContentViewDelegate {
-
     public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         presentWebViewControllerWithURL(URL)
         return false
     }
-
 
     @available(iOS 10, *)
     public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
@@ -1181,12 +1181,13 @@ extension ReaderDetailViewController: WPRichContentViewDelegate {
             let frame = textView.frameForTextInRange(characterRange)
             let shareController = PostSharingController()
             shareController.shareURL(url: URL as NSURL, fromRect: frame, inView: textView, inViewController: self)
+        } else if readerLinkRouter.canHandle(url: URL) {
+            readerLinkRouter.handle(url: URL, shouldTrack: false, source: self)
         } else {
             presentWebViewControllerWithURL(URL)
         }
         return false
     }
-
 
     func richContentView(_ richContentView: WPRichContentView, didReceiveImageAction image: WPRichTextImage) {
         // If we have gif data availible, present that
