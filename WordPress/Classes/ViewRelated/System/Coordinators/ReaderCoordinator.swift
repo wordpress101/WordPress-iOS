@@ -79,7 +79,9 @@ class ReaderCoordinator: NSObject {
             return
         }
 
-        prepareToNavigate()
+        if !isNavigatingFromSource {
+            prepareToNavigate()
+        }
 
         let streamViewController = ReaderStreamViewController.controllerWithTopic(topic)
         readerSplitViewController.showDetailViewController(streamViewController, sender: nil)
@@ -87,7 +89,9 @@ class ReaderCoordinator: NSObject {
     }
 
     func showTag(named tagName: String) {
-        prepareToNavigate()
+        if !isNavigatingFromSource {
+            prepareToNavigate()
+        }
 
         let remote = ReaderTopicServiceRemote(wordPressComRestApi: WordPressComRestApi.anonymousApi(userAgent: WPUserAgent.wordPress()))
         let slug = remote.slug(forTopicName: tagName) ?? tagName.lowercased()
@@ -98,25 +102,31 @@ class ReaderCoordinator: NSObject {
     }
 
     func showStream(with siteID: Int, isFeed: Bool) {
-        prepareToNavigate()
-
         let controller = ReaderStreamViewController.controllerWithSiteID(NSNumber(value: siteID), isFeed: isFeed)
 
-        readerSplitViewController.showDetailViewController(controller, sender: nil)
-        readerMenuViewController.deselectSelectedRow(animated: false)
+        if isNavigatingFromSource {
+            topNavigationController.pushViewController(controller, animated: true)
+        } else {
+            prepareToNavigate()
+
+            readerSplitViewController.showDetailViewController(controller, sender: nil)
+            readerMenuViewController.deselectSelectedRow(animated: false)
+        }
     }
 
     func showPost(with postID: Int, for feedID: Int, isFeed: Bool) {
-        if !isNavigatingFromSource {
-            prepareToNavigate()
-        }
-
         let detailViewController = ReaderDetailViewController.controllerWithPostID(postID as NSNumber,
-                                                                                       siteID: feedID as NSNumber,
-                                                                                       isFeed: isFeed)
+                                                                                   siteID: feedID as NSNumber,
+                                                                                   isFeed: isFeed)
 
-        topNavigationController.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
-        readerMenuViewController.deselectSelectedRow(animated: false)
+        if isNavigatingFromSource {
+            topNavigationController.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
+        } else {
+            prepareToNavigate()
+
+            topNavigationController.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
+            readerMenuViewController.deselectSelectedRow(animated: false)
+        }
     }
 
     private var topNavigationController: UINavigationController {
