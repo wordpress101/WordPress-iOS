@@ -8,7 +8,10 @@ class ReaderCoordinator: NSObject {
 
     var source: UIViewController? = nil {
         didSet {
-            isNavigatingFromSource = (source != nil && source == topNavigationController.topViewController)
+            let hasSource = source != nil
+            let sourceIsTopViewController = source == topNavigationController?.topViewController
+
+            isNavigatingFromSource = hasSource && (sourceIsTopViewController || readerIsNotCurrentlySelected)
         }
     }
 
@@ -27,7 +30,7 @@ class ReaderCoordinator: NSObject {
     private func prepareToNavigate() {
         WPTabBarController.sharedInstance().showReaderTab()
 
-        topNavigationController.popToRootViewController(animated: isNavigatingFromSource)
+        topNavigationController?.popToRootViewController(animated: isNavigatingFromSource)
     }
 
     func showReaderTab() {
@@ -66,7 +69,7 @@ class ReaderCoordinator: NSObject {
 
         readerMenuViewController.showSectionForDefaultMenuItem(withOrder: .followed, animated: false)
 
-        if let followedViewController = topNavigationController.topViewController as? ReaderStreamViewController {
+        if let followedViewController = topNavigationController?.topViewController as? ReaderStreamViewController {
             followedViewController.showManageSites(animated: isNavigatingFromSource)
         }
     }
@@ -105,7 +108,7 @@ class ReaderCoordinator: NSObject {
         let controller = ReaderStreamViewController.controllerWithSiteID(NSNumber(value: siteID), isFeed: isFeed)
 
         if isNavigatingFromSource {
-            topNavigationController.pushViewController(controller, animated: true)
+            topNavigationController?.pushViewController(controller, animated: true)
         } else {
             prepareToNavigate()
 
@@ -120,16 +123,20 @@ class ReaderCoordinator: NSObject {
                                                                                    isFeed: isFeed)
 
         if isNavigatingFromSource {
-            topNavigationController.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
+            topNavigationController?.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
         } else {
             prepareToNavigate()
 
-            topNavigationController.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
+            topNavigationController?.pushFullscreenViewController(detailViewController, animated: isNavigatingFromSource)
             readerMenuViewController.deselectSelectedRow(animated: false)
         }
     }
 
-    private var topNavigationController: UINavigationController {
+    private var topNavigationController: UINavigationController? {
+        guard readerIsNotCurrentlySelected == false else {
+            return source?.navigationController
+        }
+
         if readerMenuViewController.splitViewControllerIsHorizontallyCompact == false,
             let navigationController = readerSplitViewController.topDetailViewController?.navigationController {
             return navigationController
@@ -137,9 +144,13 @@ class ReaderCoordinator: NSObject {
 
         return readerNavigationController
     }
+
+    private var readerIsNotCurrentlySelected: Bool {
+        return WPTabBarController.sharedInstance().selectedViewController != readerSplitViewController
+    }
 }
 
-private extension ReaderTopicService {
+extension ReaderTopicService {
     /// Returns an existing topic for the specified list, or creates one if one
     /// doesn't already exist.
     ///
