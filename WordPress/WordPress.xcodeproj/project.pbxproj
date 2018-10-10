@@ -267,7 +267,6 @@
 		436D55DF210F866900CEAA33 /* StoryboardLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D55DE210F866900CEAA33 /* StoryboardLoadable.swift */; };
 		436D55F02115CB6800CEAA33 /* RegisterDomainDetailsSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D55EF2115CB6800CEAA33 /* RegisterDomainDetailsSectionTests.swift */; };
 		436D55F5211632B700CEAA33 /* RegisterDomainDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D55F4211632B700CEAA33 /* RegisterDomainDetailsViewModelTests.swift */; };
-		436D56022116FC6F00CEAA33 /* UIViewController+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D56012116FC6F00CEAA33 /* UIViewController+Additions.swift */; };
 		436D561F2117312700CEAA33 /* RegisterDomainSuggestionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D560C2117312600CEAA33 /* RegisterDomainSuggestionsViewController.swift */; };
 		436D56202117312700CEAA33 /* RegisterDomainSuggestionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D560D2117312600CEAA33 /* RegisterDomainSuggestionsTableViewController.swift */; };
 		436D56212117312700CEAA33 /* RegisterDomainDetailsViewModel+SectionDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D56102117312700CEAA33 /* RegisterDomainDetailsViewModel+SectionDefinitions.swift */; };
@@ -1890,7 +1889,6 @@
 		436D55DE210F866900CEAA33 /* StoryboardLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardLoadable.swift; sourceTree = "<group>"; };
 		436D55EF2115CB6800CEAA33 /* RegisterDomainDetailsSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDomainDetailsSectionTests.swift; sourceTree = "<group>"; };
 		436D55F4211632B700CEAA33 /* RegisterDomainDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDomainDetailsViewModelTests.swift; sourceTree = "<group>"; };
-		436D56012116FC6F00CEAA33 /* UIViewController+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Additions.swift"; sourceTree = "<group>"; };
 		436D560C2117312600CEAA33 /* RegisterDomainSuggestionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterDomainSuggestionsViewController.swift; sourceTree = "<group>"; };
 		436D560D2117312600CEAA33 /* RegisterDomainSuggestionsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterDomainSuggestionsTableViewController.swift; sourceTree = "<group>"; };
 		436D56102117312700CEAA33 /* RegisterDomainDetailsViewModel+SectionDefinitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RegisterDomainDetailsViewModel+SectionDefinitions.swift"; sourceTree = "<group>"; };
@@ -6028,7 +6026,6 @@
 				9F3EFCA2208E308900268758 /* UIViewController+Notice.swift */,
 				B5969E2120A49E86005E9DF1 /* UIAlertController+Helpers.swift */,
 				E14DF70520C922F200959BA9 /* NotificationCenter+ObserveOnce.swift */,
-				436D56012116FC6F00CEAA33 /* UIViewController+Additions.swift */,
 				9A2CD5362146B8C700AE5055 /* Array+Page.swift */,
 			);
 			path = Extensions;
@@ -9124,7 +9121,6 @@
 				7E729C2A209A241100F76599 /* AbstractPost+PostInformation.swift in Sources */,
 				8236EB502024ED8C007C7CF9 /* NotificationsViewController+JetpackPrompt.swift in Sources */,
 				5D732F971AE84E3C00CD89E7 /* PostListFooterView.m in Sources */,
-				436D56022116FC6F00CEAA33 /* UIViewController+Additions.swift in Sources */,
 				1767494E1D3633A000B8D1D1 /* ThemeBrowserSearchHeaderView.swift in Sources */,
 				0857C2781CE5375F0014AE99 /* MenuItemInsertionView.m in Sources */,
 				B532D4EA199D4357006E4DF6 /* NoteBlockHeaderTableViewCell.swift in Sources */,

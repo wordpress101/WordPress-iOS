@@ -15,22 +15,13 @@ struct PlanService<S: InAppPurchaseStore> {
     let remote: PlanServiceRemote
     fileprivate let featuresRemote: PlanFeatureServiceRemote
 
-    private lazy var restApi: WordPressComRestApi = {
-        let accountService = AccountService(managedObjectContext: ContextManager.sharedInstance().mainContext)
-        return accountService.defaultWordPressComAccount()?.wordPressComRestApi ?? WordPressComRestApi(oAuthToken: "")
-    }()
-
-    private lazy var remote_v1_3: PlanServiceRemote_ApiVersion1_3 = {
-        return PlanServiceRemote_ApiVersion1_3(wordPressComRestApi: restApi)
-    }()
-
     init(store: S, remote: PlanServiceRemote, featuresRemote: PlanFeatureServiceRemote) {
         self.store = store
         self.remote = remote
         self.featuresRemote = featuresRemote
     }
 
-    mutating func plansWithPricesForBlog(_ siteID: Int, success: @escaping (SitePricedPlans) -> Void, failure: @escaping (Error) -> Void) {
+    func plansWithPricesForBlog(_ siteID: Int, success: @escaping (SitePricedPlans) -> Void, failure: @escaping (Error) -> Void) {
         remote.getPlansForSite(siteID,
             success: { activePlan, availablePlans in
                 if let activePlan = activePlan {
@@ -44,6 +35,8 @@ struct PlanService<S: InAppPurchaseStore> {
             }, failure: failure)
 
         if FeatureFlag.automatedTransfersCustomDomain.enabled {
+            let remote_v1_3 = PlanServiceRemote_ApiVersion1_3(wordPressComRestApi: remote.wordPressComRestApi)
+
             remote_v1_3.getPlansForSite(
                 siteID,
                 success: { (plans) in

@@ -151,6 +151,18 @@ class RegisterDomainDetailsViewController: NUXTableViewController {
         alertController.addCancelActionWithTitle(alertCancel, handler: nil)
         present(alertController, animated: true, completion: nil)
     }
+
+    /// Sets up a gesture recognizer to make tap gesture close the keyboard
+    private func setupEditingEndingTapGestureRecognizer() {
+        let gestureRecognizer = UITapGestureRecognizer()
+        gestureRecognizer.cancelsTouchesInView = false
+
+        gestureRecognizer.on { [weak self] (gesture) in
+            self?.view.endEditing(true)
+        }
+
+        view.addGestureRecognizer(gestureRecognizer)
+    }
 }
 
 // MARK: - Actions
