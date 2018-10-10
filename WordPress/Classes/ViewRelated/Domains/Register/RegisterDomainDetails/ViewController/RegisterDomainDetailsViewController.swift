@@ -81,10 +81,10 @@ class RegisterDomainDetailsViewController: NUXTableViewController {
         )
 
         tableView.estimatedSectionHeaderHeight = Constants.estimatedRowHeight
-        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
 
         tableView.estimatedSectionFooterHeight = Constants.estimatedRowHeight
-        tableView.sectionFooterHeight = UITableViewAutomaticDimension
+        tableView.sectionFooterHeight = UITableView.automaticDimension
 
         reloadViewModel()
     }

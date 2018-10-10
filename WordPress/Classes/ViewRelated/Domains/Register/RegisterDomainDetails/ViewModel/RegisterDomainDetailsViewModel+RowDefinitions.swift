@@ -179,7 +179,7 @@ extension RegisterDomainDetailsViewModel {
 
 extension RegisterDomainDetailsViewModel.Row.EditableKeyValueRow {
 
-    func accessoryType() -> UITableViewCellAccessoryType {
+    func accessoryType() -> UITableViewCell.AccessoryType {
         switch editingStyle {
         case .inline:
             return .none

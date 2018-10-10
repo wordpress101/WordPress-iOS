@@ -144,7 +144,9 @@ class PluginViewModel: Observable {
             return nil
         }
 
-        let isHostedAtWPCom = BlogService.blog(with: site)?.isHostedAtWPcom ?? false
+        let blog = BlogService.blog(with: site)
+        let isHostedAtWPCom = blog?.isHostedAtWPcom ?? false
+        let hasDomainCredits = blog?.hasDomainCredit ?? false
 
         guard isHostedAtWPCom || capabilities?.modify == true else {
             // If we know about versions, but we can't update/install the plugin, just show the version number.
@@ -155,7 +157,7 @@ class PluginViewModel: Observable {
         guard let plugin = plugin else {
             // This means we have capabilities to update a Plugin, but we're not looking at an already-installed plugin.
             // We're gonna show a "install plugin" button.
-            guard directoryEntry != nil else {
+            guard let directoryEntry = directoryEntry else {
                 return nil
             }
 
@@ -172,17 +174,23 @@ class PluginViewModel: Observable {
                 subtitle: nil,
                 actionLabel: NSLocalizedString("Install", comment: "Button label to install a plugin"),
                 onButtonTap: { [unowned self] _ in
-if isHostedAtWPCom {
+
+                    // If the site isn't hosted at .com, then we have a straight-forward process on how to handle it.
+                    // Let's just install the plugin and bail early here.
+                    guard isHostedAtWPCom else {
+                        ActionDispatcher.dispatch(PluginAction.install(plugin: directoryEntry, site: self.site))
+                        return
+                    }
+
                     if FeatureFlag.automatedTransfersCustomDomain.enabled {
-                        if self.shouldShowRegisterDomainAlert() {
-                    let alert = self.confirmRegisterDomainAlert()
-                            self.present?(alert) 
-} else {
+                        if hasDomainCredits {
+                            let alert = self.confirmRegisterDomainAlert()
+                            self.present?(alert)
+                        }
+                    } else {
+
                         guard let atHelper = AutomatedTransferHelper(site: self.site, plugin: directoryEntry) else {
                             ActionDispatcher.dispatch(NoticeAction.post(Notice(title: String(format: NSLocalizedString("Error installing %@.", comment: "Notice displayed after attempt to install a plugin fails."), directoryEntry.name))))
-
-                            
-                        } else {
                             return
                         }
 
@@ -190,9 +198,6 @@ if isHostedAtWPCom {
 
                         let alertController = atHelper.automatedTransferConfirmationPrompt()
                         self.present?(alertController)
-                    }
-                    else {
-                        ActionDispatcher.dispatch(PluginAction.install(plugin: directoryEntry, site: self.site))
                     }
                 }
             )
@@ -237,17 +242,6 @@ if isHostedAtWPCom {
         }
         ActionDispatcher.dispatch(PluginAction.install(plugin: directoryEntry,
                                                        site: self.site))
-    }
-
-    private func shouldShowRegisterDomainAlert() -> Bool {
-        let context = ContextManager.sharedInstance().mainContext
-        let blogService = BlogService(managedObjectContext: context)
-        if let blog = blogService.blog(byBlogId: NSNumber(value: self.site.siteID)),
-            blog.isHostedAtWPcom,
-            blog.hasDomainCredit {
-            return true
-        }
-        return false
     }
 
     func noResultsViewModel() -> NoResultsViewController.Model? {
@@ -472,16 +466,18 @@ if isHostedAtWPCom {
 
     private func confirmRegisterDomainAlert() -> UIAlertController {
         let title = NSLocalizedString("Install Plugin", comment: "Install Plugin dialog title.")
-        let message = NSLocalizedString("To install plugins you need to have a custom domain associated with your site.", comment: "Install Plugin dialog text.")
+        let message = NSLocalizedString("To install plugins, you need to have a custom domain associated with your site.", comment: "Install Plugin dialog text.")
         let registerDomainActionTitle = NSLocalizedString("Register domain", comment: "Install Plugin dialog register domain button text")
 
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addCancelActionWithTitle(NSLocalizedString("Cancel", comment: "Cancel registering a domain")) { [weak self] (action) in
             self?.installPlugin()
         }
+
         let registerDomainAction = alertController.addDefaultActionWithTitle(registerDomainActionTitle) { [weak self] (action) in
             self?.presentDomainRegistration()
         }
+
         alertController.preferredAction = registerDomainAction
         return alertController
     }

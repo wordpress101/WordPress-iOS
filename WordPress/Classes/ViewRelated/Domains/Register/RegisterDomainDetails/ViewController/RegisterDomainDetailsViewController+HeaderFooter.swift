@@ -75,7 +75,7 @@ extension RegisterDomainDetailsViewController {
         let attributes: StyledHTMLAttributes = [
             .BodyAttribute: [.font: font,
                              .foregroundColor: bodyColor],
-            .ATagAttribute: [.underlineStyle: NSUnderlineStyle.styleSingle.rawValue,
+            .ATagAttribute: [.underlineStyle: NSUnderlineStyle.single.rawValue,
                              .foregroundColor: linkColor]
         ]
         let attributedTerms = NSAttributedString.attributedStringWithHTML(
