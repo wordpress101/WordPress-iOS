@@ -184,7 +184,7 @@ class PluginViewModel: Observable {
 
                     if FeatureFlag.automatedTransfersCustomDomain.enabled {
                         if hasDomainCredits {
-                            let alert = self.confirmRegisterDomainAlert()
+                            let alert = self.confirmRegisterDomainAlert(for: directoryEntry)
                             self.present?(alert)
                         }
                     } else {
@@ -234,14 +234,6 @@ class PluginViewModel: Observable {
         }
 
         return versionRow
-    }
-
-    private func installPlugin() {
-        guard let directoryEntry = directoryEntry else {
-            return
-        }
-        ActionDispatcher.dispatch(PluginAction.install(plugin: directoryEntry,
-                                                       site: self.site))
     }
 
     func noResultsViewModel() -> NoResultsViewController.Model? {
@@ -464,14 +456,19 @@ class PluginViewModel: Observable {
             ])
     }
 
-    private func confirmRegisterDomainAlert() -> UIAlertController {
+    private func confirmRegisterDomainAlert(for directoryEntry: PluginDirectoryEntry) -> UIAlertController {
         let title = NSLocalizedString("Install Plugin", comment: "Install Plugin dialog title.")
         let message = NSLocalizedString("To install plugins, you need to have a custom domain associated with your site.", comment: "Install Plugin dialog text.")
         let registerDomainActionTitle = NSLocalizedString("Register domain", comment: "Install Plugin dialog register domain button text")
 
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addCancelActionWithTitle(NSLocalizedString("Cancel", comment: "Cancel registering a domain")) { [weak self] (action) in
-            self?.installPlugin()
+            guard let self = self else {
+                return
+            }
+            ActionDispatcher.dispatch(PluginAction.install(plugin: directoryEntry,
+                                                           site: self.site))
+
         }
 
         let registerDomainAction = alertController.addDefaultActionWithTitle(registerDomainActionTitle) { [weak self] (action) in
@@ -515,7 +512,7 @@ class PluginViewModel: Observable {
     }
 
     private func presentDomainRegistration() {
-        let controller = RegisterDomainSuggestionsViewController.instance(siteName: suggestionSiteName())
+        let controller = RegisterDomainSuggestionsViewController.instance(siteName: siteNameForSuggestions())
         let navigationController = UINavigationController(rootViewController: controller)
         self.present?(navigationController)
     }
@@ -543,29 +540,21 @@ class PluginViewModel: Observable {
     }
 
     private func getSiteTitle() -> String? {
-        return getBlog()?.settings?.name?.nonEmptyString()
+        return BlogService.blog(with: site)?.settings?.name?.nonEmptyString()
     }
 
-    private func getSiteUrl() -> String? {
-        return getBlog()?.url
-    }
-
-    private func suggestionSiteName() -> String? {
+    private func siteNameForSuggestions() -> String? {
         if let siteTitle = getSiteTitle() {
             return siteTitle
         }
-        if let siteUrl = getSiteUrl() {
+
+        if let siteUrl = BlogService.blog(with: site)?.url {
             let components = URLComponents(string: siteUrl)
             if let firstComponent = components?.host?.split(separator: ".").first {
                 return String(firstComponent)
             }
         }
         return nil
-    }
-
-    private func getBlog() -> Blog? {
-        let service = BlogService.withMainContext()
-        return service.blog(byBlogId: site.siteID as NSNumber)
     }
 
     private func setHTMLTextAttributes(_ htmlText: NSAttributedString) -> NSAttributedString {
