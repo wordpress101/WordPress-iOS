@@ -142,7 +142,7 @@ class MediaLibraryViewController: WPMediaPickerViewController {
 
             var barButtonItems = [UIBarButtonItem]()
 
-            if blog.userCanUploadMedia {
+            if blog.userCanUploadMedia && assetCount > 0 {
                 let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
                 barButtonItems.append(addButton)
             }
@@ -168,7 +168,7 @@ class MediaLibraryViewController: WPMediaPickerViewController {
             noResultsView.removeFromView()
 
             if hasSearchQuery {
-                noResultsView.configureForNoSearchResult(with: pickerDataSource.searchQuery)
+                noResultsView.configureForNoSearchResult()
             } else {
                 noResultsView.configureForNoAssets(userCanUploadMedia: blog.userCanUploadMedia)
             }
@@ -253,7 +253,14 @@ class MediaLibraryViewController: WPMediaPickerViewController {
     }
 
     private func showOptionsMenu() {
-        let pickingContext = MediaPickingContext(origin: self, view: view, barButtonItem: navigationItem.rightBarButtonItem, blog: blog)
+
+        let pickingContext: MediaPickingContext
+        if pickerDataSource.totalAssetCount > 0 {
+            pickingContext = MediaPickingContext(origin: self, view: view, barButtonItem: navigationItem.rightBarButtonItem, blog: blog)
+        } else {
+            pickingContext = MediaPickingContext(origin: self, view: noResultsView.actionButton, blog: blog)
+        }
+
         mediaPickingCoordinator.present(context: pickingContext)
     }
 
@@ -642,6 +649,8 @@ fileprivate extension Blog {
     }
 }
 
+// MARK: Stock Photos Picker Delegate
+
 extension MediaLibraryViewController: StockPhotosPickerDelegate {
     func stockPhotosPicker(_ picker: StockPhotosPicker, didFinishPicking assets: [StockPhotosMedia]) {
         guard assets.count > 0 else {
@@ -653,6 +662,21 @@ extension MediaLibraryViewController: StockPhotosPickerDelegate {
             let info = MediaAnalyticsInfo(origin: .mediaLibrary(.stockPhotos), selectionMethod: .fullScreenPicker)
             mediaCoordinator.addMedia(from: $0, to: blog, analyticsInfo: info)
             WPAnalytics.track(.stockMediaUploaded)
+        }
+    }
+}
+
+// MARK: Giphy Picker Delegate
+
+extension MediaLibraryViewController: GiphyPickerDelegate {
+    func giphyPicker(_ picker: GiphyPicker, didFinishPicking assets: [GiphyMedia]) {
+        guard assets.count > 0 else {
+            return
+        }
+
+        let mediaCoordinator = MediaCoordinator.shared
+        assets.forEach { giphyMedia in
+            mediaCoordinator.addMedia(from: giphyMedia, to: blog)
         }
     }
 }

@@ -112,7 +112,8 @@ NSString * const OptionsKeyIsAutomatedTransfer = @"is_automated_transfer";
 
 - (BOOL)isAutomatedTransfer
 {
-    return [self getOptionValue:OptionsKeyIsAutomatedTransfer];
+    NSNumber *value = (NSNumber *)[self getOptionValue:OptionsKeyIsAutomatedTransfer];
+    return [value boolValue];
 }
 
 - (NSString *)icon
@@ -558,13 +559,23 @@ NSString * const OptionsKeyIsAutomatedTransfer = @"is_automated_transfer";
 
 - (BOOL)supportsPluginManagement
 {
+    BOOL hasRequiredJetpack = [self hasRequiredJetpackVersion:@"5.6"];
+
     if ([Feature enabled:FeatureFlagAutomatedTransfersCustomDomain]) {
         return self.isHostedAtWPcom
         && self.planID.integerValue == WPComBusinessPlanId
         && self.siteVisibility != SiteVisibilityPrivate
         && self.isAdmin;
+    if ([Feature enabled:FeatureFlagAutomatedTransfer]) {
+        BOOL isTransferrable = self.isHostedAtWPcom
+            && self.planID.integerValue == WPComBusinessPlanId
+            && self.siteVisibility != SiteVisibilityPrivate
+            && self.isAdmin
+            && ![self.hostURL containsString:@".wordpress.com"];
+
+        return isTransferrable || hasRequiredJetpack;
     } else {
-        return [self hasRequiredJetpackVersion:@"5.6"];
+        return hasRequiredJetpack;
     }
 }
 

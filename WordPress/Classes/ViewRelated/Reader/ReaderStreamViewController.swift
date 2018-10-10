@@ -22,11 +22,14 @@ import WordPressFlux
 
     // MARK: - Properties
 
+    /// Called if the stream or tag fails to load
+    var streamLoadFailureBlock: (() -> Void)? = nil
+
     fileprivate var tableView: UITableView!
     fileprivate var refreshControl: UIRefreshControl!
     fileprivate var syncHelper: WPContentSyncHelper!
     fileprivate var tableViewController: UITableViewController!
-    fileprivate var resultsStatusView: WPNoResultsView!
+    fileprivate var resultsStatusView = NoResultsViewController.controller()
     fileprivate var footerView: PostListFooterView!
 
     fileprivate let loadMoreThreashold = 4
@@ -53,6 +56,8 @@ import WordPressFlux
     private let cellConfiguration = ReaderCellConfiguration()
     /// Actions
     private var postCellActions: ReaderPostCellActions?
+
+    let news = ReaderNewsCard()
 
     /// Used for fetching content.
     fileprivate lazy var displayContext: NSManagedObjectContext = ContextManager.sharedInstance().newMainContextChildContext()
@@ -113,7 +118,7 @@ import WordPressFlux
         let storyboard = UIStoryboard(name: "Reader", bundle: Bundle.main)
         let controller = storyboard.instantiateViewController(withIdentifier: "ReaderStreamViewController") as! ReaderStreamViewController
         controller.readerTopic = topic
-
+        controller.checkNewsCardAvailability(topic: topic)
         return controller
     }
 
@@ -237,8 +242,6 @@ import WordPressFlux
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // Trigger layouts, if needed, to correct for any inherited layout changes, such as margins.
-        refreshTableHeaderIfNeeded()
         syncIfAppropriate()
     }
 
@@ -277,7 +280,6 @@ import WordPressFlux
         if didSetupView {
             refreshTableViewHeaderLayout()
         }
-        centerResultsStatusViewIfNeeded()
     }
 
 
@@ -299,6 +301,7 @@ import WordPressFlux
                 guard let objectID = objectID, let topic = (try? context.existingObject(with: objectID)) as? ReaderAbstractTopic else {
                     DDLogError("Reader: Error retriving an existing site topic by its objectID")
                     self?.displayLoadingStreamFailed()
+                    self?.reportStreamLoadFailure()
                     return
                 }
                 self?.readerTopic = topic
@@ -306,6 +309,7 @@ import WordPressFlux
             },
             failure: { [weak self] (error: Error?) in
                 self?.displayLoadingStreamFailed()
+                self?.reportStreamLoadFailure()
             })
     }
 
@@ -325,6 +329,7 @@ import WordPressFlux
                 guard let objectID = objectID, let topic = (try? context.existingObject(with: objectID)) as? ReaderAbstractTopic else {
                     DDLogError("Reader: Error retriving an existing tag topic by its objectID")
                     self?.displayLoadingStreamFailed()
+                    self?.reportStreamLoadFailure()
                     return
                 }
                 self?.readerTopic = topic
@@ -332,6 +337,7 @@ import WordPressFlux
             },
             failure: { [weak self] (error: Error?) in
                 self?.displayLoadingStreamFailed()
+                self?.reportStreamLoadFailure()
             })
     }
 
@@ -348,13 +354,11 @@ import WordPressFlux
         tableConfiguration.setup(tableView)
     }
 
-
     fileprivate func setupContentHandler() {
         assert(tableView != nil, "A tableView must be assigned before configuring a handler")
 
         content.initializeContent(tableView: tableView, delegate: self)
     }
-
 
     fileprivate func setupSyncHelper() {
         syncHelper = WPContentSyncHelper()
@@ -362,7 +366,7 @@ import WordPressFlux
     }
 
     fileprivate func setupResultsStatusView() {
-        resultsStatusView = WPNoResultsView()
+        resultsStatusView.delegate = self
     }
 
     fileprivate func setupFooterView() {
@@ -380,116 +384,7 @@ import WordPressFlux
         footerView.isHidden = true
     }
 
-
-    // MARK: - Handling Loading and No Results
-
-    private func setStatusViewTitle(_ title: String, message: String) {
-        // Potential fix for a crash where it seems we attempted to update the status view
-        // title or message before the IBOutlets were connected: https://github.com/wordpress-mobile/WordPress-iOS/issues/9745
-        guard isViewLoaded else {
-            return
-        }
-
-        resultsStatusView.titleText = title
-        resultsStatusView.messageText = message
-    }
-
-    @objc func displayLoadingStream() {
-        setStatusViewTitle(NSLocalizedString("Loading stream...", comment: "A short message to inform the user the requested stream is being loaded."),
-                                             message: "")
-        displayResultsStatus()
-    }
-
-
-    @objc func displayLoadingStreamFailed() {
-        setStatusViewTitle(NSLocalizedString("Problem loading stream", comment: "Error message title informing the user that a stream could not be loaded."),
-                           message: NSLocalizedString("Sorry. The stream could not be loaded.", comment: "A short error message leting the user know the requested stream could not be loaded."))
-        displayResultsStatus()
-    }
-
-
-    @objc func displayLoadingViewIfNeeded() {
-        let count = content.contentCount
-        if count > 0 {
-            return
-        }
-
-        tableView.tableHeaderView?.isHidden = true
-        resultsStatusView.titleText = NSLocalizedString("Fetching posts...", comment: "A brief prompt shown when the reader is empty, letting the user know the app is currently fetching new posts.")
-        resultsStatusView.messageText = ""
-        resultsStatusView.buttonTitle = nil
-        resultsStatusView.delegate = nil
-
-        let boxView = WPAnimatedBox()
-        resultsStatusView.accessoryView = boxView
-        displayResultsStatus()
-        boxView.animate(afterDelay: 0.3)
-    }
-
-
-    @objc func displayNoResultsView() {
-        // Its possible the topic was deleted before a sync could be completed,
-        // so make certain its not nil.
-        guard let topic = readerTopic else {
-            return
-        }
-
-        tableView.tableHeaderView?.isHidden = true
-
-        guard connectionAvailable() else {
-            displayNoConnectionView(topic)
-            return
-        }
-
-        let response: NoResultsResponse = ReaderStreamViewController.responseForNoResults(topic)
-        resultsStatusView.titleText = response.title
-        resultsStatusView.messageText = response.message
-        resultsStatusView.accessoryView = nil
-        if ReaderHelpers.topicIsFollowing(topic) {
-            resultsStatusView.buttonTitle = NSLocalizedString("Manage Sites", comment: "Button title. Tapping lets the user manage the sites they follow.")
-            resultsStatusView.delegate = self
-        } else {
-            resultsStatusView.buttonTitle = nil
-            resultsStatusView.delegate = nil
-        }
-        displayResultsStatus()
-    }
-
-    private func displayNoConnectionView(_ topic: ReaderAbstractTopic) {
-        resultsStatusView.titleText = NSLocalizedString("Unable to Sync", comment: "Title of error prompt shown when a sync the user initiated fails.")
-        resultsStatusView.messageText = noConnectionMessage()
-        resultsStatusView.accessoryView = nil
-        displayResultsStatus()
-    }
-
-
-    @objc func displayResultsStatus() {
-        if !resultsStatusView.isDescendant(of: tableView) {
-            tableView.addSubview(withFadeAnimation: resultsStatusView)
-            resultsStatusView.translatesAutoresizingMaskIntoConstraints = false
-            tableView.pinSubviewAtCenter(resultsStatusView)
-        }
-
-        footerView.isHidden = true
-    }
-
-
-    @objc func centerResultsStatusViewIfNeeded() {
-        if resultsStatusView.isDescendant(of: tableView) {
-            resultsStatusView.centerInSuperview()
-        }
-    }
-
-
-    @objc func hideResultsStatus() {
-        resultsStatusView.removeFromSuperview()
-        footerView.isHidden = false
-        tableView.tableHeaderView?.isHidden = false
-    }
-
-
     // MARK: - Configuration / Topic Presentation
-
 
     @objc func configureStreamHeader() {
         guard let topic = readerTopic else {
@@ -497,9 +392,13 @@ import WordPressFlux
             return
         }
 
-        guard let header = ReaderStreamViewController.headerWithNewsCardForStream(topic, isLoggedIn: isLoggedIn, delegate: self) else {
+        guard let header = headerWithNewsCardForStream(topic, isLoggedIn: isLoggedIn, container: tableViewController) else {
             tableView.tableHeaderView = nil
             return
+        }
+
+        if let tableHeaderView = tableView.tableHeaderView {
+            header.isHidden = tableHeaderView.isHidden
         }
 
         tableView.tableHeaderView = header
@@ -698,9 +597,15 @@ import WordPressFlux
         navigationController?.pushViewController(controller, animated: animated)
     }
 
+    func showFollowing() {
+        guard let readerMenuViewController = WPTabBarController.sharedInstance().readerMenuViewController else {
+            return
+        }
+
+        readerMenuViewController.showSectionForDefaultMenuItem(withOrder: .followed, animated: true)
+    }
 
     // MARK: - Blocking
-
 
     fileprivate func blockSiteForPost(_ post: ReaderPost) {
         guard let indexPath = content.indexPath(forObject: post) else {
@@ -1240,6 +1145,36 @@ extension ReaderStreamViewController: ReaderStreamHeaderDelegate {
     }
 }
 
+extension ReaderStreamViewController: NewsManagerDelegate {
+    func didDismissNews() {
+        refreshTableHeaderIfNeeded()
+    }
+
+    func didSelectReadMore(_ url: URL) {
+        let readerLinkRouter = UniversalLinkRouter.shared
+        if readerLinkRouter.canHandle(url: url) {
+            readerLinkRouter.handle(url: url, shouldTrack: false, source: self)
+        } else if url.isWordPressDotComPost {
+            presentReaderDetailViewControllerWithURL(url)
+        } else {
+            presentWebViewControllerWithURL(url)
+        }
+    }
+
+    private func presentWebViewControllerWithURL(_ url: URL) {
+        let configuration = WebViewControllerConfiguration(url: url)
+        configuration.authenticateWithDefaultAccount()
+        configuration.addsWPComReferrer = true
+        let controller = WebViewControllerFactory.controller(configuration: configuration)
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
+    }
+
+    private func presentReaderDetailViewControllerWithURL(_ url: URL) {
+        let viewController = ReaderDetailViewController.controllerWithPostURL(url)
+        navigationController?.pushFullscreenViewController(viewController, animated: true)
+    }
+}
 
 // MARK: - WPContentSyncHelperDelegate
 
@@ -1275,7 +1210,15 @@ extension ReaderStreamViewController: WPContentSyncHelperDelegate {
         if let count = content.content?.count,
             count == 0 {
             displayLoadingStreamFailed()
+            reportStreamLoadFailure()
         }
+    }
+
+    fileprivate func reportStreamLoadFailure() {
+        streamLoadFailureBlock?()
+
+        // We'll nil out the failure block so we don't perform multiple callbacks
+        streamLoadFailureBlock = nil
     }
 }
 
@@ -1339,15 +1282,14 @@ extension ReaderStreamViewController: WPTableViewHandlerDelegate {
         updateAndPerformFetchRequest()
     }
 
-
     public func tableViewHandlerDidRefreshTableViewPreservingOffset(_ tableViewHandler: WPTableViewHandler) {
+        hideResultsStatus()
         if tableViewHandler.resultsController.fetchedObjects?.count == 0 {
             if syncHelper.isSyncing {
                 return
             }
             displayNoResultsView()
         } else {
-            hideResultsStatus()
             tableView.flashScrollIndicators()
         }
     }
@@ -1527,11 +1469,122 @@ extension ReaderStreamViewController: SearchableActivityConvertable {
     }
 }
 
-// MARK: - WPNoResultsViewDelegate Conformance
+// MARK: - Handling Loading and No Results
 
-extension ReaderStreamViewController: WPNoResultsViewDelegate {
-    public func didTap(_ noResultsView: WPNoResultsView!) {
-        showManageSites()
+private extension ReaderStreamViewController {
+
+    func displayLoadingStream() {
+        configureAndDisplayResultsStatus(title: ResultsStatusText.loadingStreamTitle, accessoryView: NoResultsViewController.loadingAccessoryView())
+    }
+
+    func displayLoadingStreamFailed() {
+        configureAndDisplayResultsStatus(title: ResultsStatusText.loadingErrorTitle, subtitle: ResultsStatusText.loadingErrorMessage)
+    }
+
+    func displayLoadingViewIfNeeded() {
+        if content.contentCount > 0 {
+            return
+        }
+
+        tableView.tableHeaderView?.isHidden = true
+        configureAndDisplayResultsStatus(title: ResultsStatusText.fetchingPostsTitle, accessoryView: NoResultsViewController.loadingAccessoryView())
+    }
+
+    func displayNoResultsView() {
+        // Its possible the topic was deleted before a sync could be completed,
+        // so make certain its not nil.
+        guard let topic = readerTopic else {
+            return
+        }
+
+        tableView.tableHeaderView?.isHidden = true
+
+        guard connectionAvailable() else {
+            displayNoConnectionView()
+            return
+        }
+
+        let response: NoResultsResponse = ReaderStreamViewController.responseForNoResults(topic)
+
+        let buttonTitle = buttonTitleForTopic(topic)
+        let imageName = ReaderHelpers.topicIsFollowing(topic) ? readerEmptyImageName : nil
+
+        configureAndDisplayResultsStatus(title: response.title, subtitle: response.message, buttonTitle: buttonTitle, imageName: imageName)
+    }
+
+    func displayNoConnectionView() {
+        configureAndDisplayResultsStatus(title: ResultsStatusText.noConnectionTitle, subtitle: noConnectionMessage())
+    }
+
+    func configureAndDisplayResultsStatus(title: String,
+                                          subtitle: String? = nil,
+                                          buttonTitle: String? = nil,
+                                          imageName: String? = nil,
+                                          accessoryView: UIView? = nil) {
+
+        resultsStatusView.configure(title: title, buttonTitle: buttonTitle, subtitle: subtitle, image: imageName, accessoryView: accessoryView)
+        displayResultsStatus()
+    }
+
+    func displayResultsStatus() {
+        resultsStatusView.removeFromView()
+        tableViewController.addChildViewController(resultsStatusView)
+        tableView.insertSubview(resultsStatusView.view, belowSubview: refreshControl)
+        resultsStatusView.view.frame = tableView.frame
+        resultsStatusView.didMove(toParentViewController: tableViewController)
+        footerView.isHidden = true
+    }
+
+    func hideResultsStatus() {
+        resultsStatusView.removeFromView()
+        footerView.isHidden = false
+        tableView.tableHeaderView?.isHidden = false
+    }
+
+    func buttonTitleForTopic(_ topic: ReaderAbstractTopic) -> String? {
+        if ReaderHelpers.topicIsFollowing(topic) {
+            return ResultsStatusText.manageSitesButtonTitle
+        }
+
+        if ReaderHelpers.topicIsLiked(topic) {
+            return ResultsStatusText.followingButtonTitle
+        }
+
+        return nil
+    }
+
+    struct ResultsStatusText {
+        static let fetchingPostsTitle = NSLocalizedString("Fetching posts...", comment: "A brief prompt shown when the reader is empty, letting the user know the app is currently fetching new posts.")
+        static let loadingStreamTitle = NSLocalizedString("Loading stream...", comment: "A short message to inform the user the requested stream is being loaded.")
+        static let loadingErrorTitle = NSLocalizedString("Problem loading stream", comment: "Error message title informing the user that a stream could not be loaded.")
+        static let loadingErrorMessage = NSLocalizedString("Sorry. The stream could not be loaded.", comment: "A short error message letting the user know the requested stream could not be loaded.")
+        static let manageSitesButtonTitle = NSLocalizedString("Manage Sites", comment: "Button title. Tapping lets the user manage the sites they follow.")
+        static let followingButtonTitle = NSLocalizedString("Go to Following", comment: "Button title. Tapping lets the user view the sites they follow.")
+        static let noConnectionTitle = NSLocalizedString("Unable to Sync", comment: "Title of error prompt shown when a sync the user initiated fails.")
+    }
+
+    var readerEmptyImageName: String {
+      return "wp-illustration-reader-empty"
+    }
+
+}
+
+// MARK: - NoResultsViewControllerDelegate
+
+extension ReaderStreamViewController: NoResultsViewControllerDelegate {
+    func actionButtonPressed() {
+        guard let topic = readerTopic else {
+            return
+        }
+
+        if ReaderHelpers.topicIsFollowing(topic) {
+            showManageSites()
+            return
+        }
+
+        if ReaderHelpers.topicIsLiked(topic) {
+            showFollowing()
+        }
     }
 }
 

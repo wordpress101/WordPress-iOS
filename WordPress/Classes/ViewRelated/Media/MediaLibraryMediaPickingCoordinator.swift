@@ -4,13 +4,14 @@ import WPMediaPicker
 /// Prepares the alert controller that will be presented when tapping the "+" button in Media Library
 final class MediaLibraryMediaPickingCoordinator {
     private let stockPhotos = StockPhotosPicker()
-    private let giphy = GiphyPicker()
+    private var giphy = GiphyPicker()
     private let cameraCapture = CameraCaptureCoordinator()
     private let mediaLibrary = MediaLibraryPicker()
 
-    init(delegate: StockPhotosPickerDelegate & WPMediaPickerViewControllerDelegate) {
+    init(delegate: StockPhotosPickerDelegate & WPMediaPickerViewControllerDelegate & GiphyPickerDelegate) {
         stockPhotos.delegate = delegate
         mediaLibrary.delegate = delegate
+        giphy.delegate = delegate
     }
 
     func present(context: MediaPickingContext) {
@@ -46,6 +47,7 @@ final class MediaLibraryMediaPickingCoordinator {
         menuAlert.addAction(cancelAction())
 
         menuAlert.popoverPresentationController?.sourceView = fromView
+        menuAlert.popoverPresentationController?.sourceRect = fromView.bounds
         menuAlert.popoverPresentationController?.barButtonItem = buttonItem
 
         origin.present(menuAlert, animated: true, completion: nil)
@@ -95,6 +97,12 @@ final class MediaLibraryMediaPickingCoordinator {
     }
 
     private func showGiphy(origin: UIViewController, blog: Blog) {
+        let delegate = giphy.delegate
+
+        // Create a new GiphyPicker each time so we don't save state
+        giphy = GiphyPicker()
+        giphy.delegate = delegate
+
         giphy.presentPicker(origin: origin, blog: blog)
     }
 
