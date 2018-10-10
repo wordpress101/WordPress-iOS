@@ -305,8 +305,8 @@ private extension DomainSuggestionsTableViewController {
         noResultsViewController.view.frame = cell.frame
         cell.contentView.addSubview(noResultsViewController.view)
 
-        addChildViewController(noResultsViewController)
-        noResultsViewController.didMove(toParentViewController: self)
+        addChild(noResultsViewController)
+        noResultsViewController.didMove(toParent: self)
     }
 
     func removeNoResultsFromView() {

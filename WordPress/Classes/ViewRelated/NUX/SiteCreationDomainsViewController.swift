@@ -1,5 +1,6 @@
 import UIKit
 import WordPressAuthenticator
+import WordPressShared
 
 class SiteCreationDomainsViewController: NUXViewController, DomainSuggestionsButtonViewPresenter {
 
@@ -43,6 +44,11 @@ class SiteCreationDomainsViewController: NUXViewController, DomainSuggestionsBut
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         showButtonView(show: false, withAnimation: false)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WPAppAnalytics.track(.createSiteDomainViewed)
     }
 
     private func configureView() {
