@@ -221,7 +221,7 @@ DEPENDENCIES:
   - Gifu (= 3.2.0)
   - GiphyCoreSDK (~> 1.4.0)
   - Gridicons (= 0.16)
-  - Gutenberg (from `http://github.com/wordpress-mobile/gutenberg-mobile/`)
+  - Gutenberg (from `http://github.com/wordpress-mobile/gutenberg-mobile/`, branch `demo-1811`)
   - HockeySDK (= 5.1.4)
   - lottie-ios (= 2.5.0)
   - MGSwipeTableCell (= 1.6.7)
@@ -235,7 +235,7 @@ DEPENDENCIES:
   - Reachability (= 3.2)
   - React (from `https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/master/react-native-gutenberg-bridge/third-party-podspecs/React.podspec.json`)
   - RNSVG (from `https://github.com/react-native-community/react-native-svg.git`, tag `8.0.8`)
-  - RNTAztecView (from `https://github.com/wordpress-mobile/react-native-aztec.git`)
+  - RNTAztecView (from `https://github.com/wordpress-mobile/react-native-aztec.git`, branch `demo-1811`)
   - Starscream (= 3.0.6)
   - SVProgressHUD (= 2.2.5)
   - UIDeviceIdentifier (~> 0.4)
@@ -297,6 +297,7 @@ EXTERNAL SOURCES:
   Folly:
     :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/master/react-native-gutenberg-bridge/third-party-podspecs/Folly.podspec.json
   Gutenberg:
+    :branch: demo-1811
     :git: http://github.com/wordpress-mobile/gutenberg-mobile/
   React:
     :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/master/react-native-gutenberg-bridge/third-party-podspecs/React.podspec.json
@@ -304,6 +305,7 @@ EXTERNAL SOURCES:
     :git: https://github.com/react-native-community/react-native-svg.git
     :tag: 8.0.8
   RNTAztecView:
+    :branch: demo-1811
     :git: https://github.com/wordpress-mobile/react-native-aztec.git
   yoga:
     :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/master/react-native-gutenberg-bridge/third-party-podspecs/yoga.podspec.json
@@ -313,13 +315,13 @@ CHECKOUT OPTIONS:
     :git: https://github.com/Automattic/Automattic-Tracks-iOS.git
     :tag: 0.2.3
   Gutenberg:
-    :commit: 7ac7875094b52bb13eacb8d36005aeba36ed0cf8
+    :commit: 31e545d35865efc5eab024b792dc6d591264e563
     :git: http://github.com/wordpress-mobile/gutenberg-mobile/
   RNSVG:
     :git: https://github.com/react-native-community/react-native-svg.git
     :tag: 8.0.8
   RNTAztecView:
-    :commit: 08916a6d6491132969f33c1867af8a5b1d733758
+    :commit: 6ed662617a372db6413d36fd2100f67d16329a05
     :git: https://github.com/wordpress-mobile/react-native-aztec.git
 
 SPEC CHECKSUMS:
@@ -369,6 +371,6 @@ SPEC CHECKSUMS:
   yoga: f37b1edbd68be803f1dc4d57d40d8a5b277d8e2c
   ZendeskSDK: 44ee00338dd718495f0364369420ae11b389c878
 
-PODFILE CHECKSUM: 5c46b4523240aa9e3d6ca58bd485e03a47292101
+PODFILE CHECKSUM: 330d5e27780bc6f508f1bea310f515388704717c
 
 COCOAPODS: 1.5.3
