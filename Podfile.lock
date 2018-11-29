@@ -315,13 +315,13 @@ CHECKOUT OPTIONS:
     :git: https://github.com/Automattic/Automattic-Tracks-iOS.git
     :tag: 0.2.3
   Gutenberg:
-    :commit: 31e545d35865efc5eab024b792dc6d591264e563
+    :commit: 3827c8e75283e01ee578a6757b952e60883943fa
     :git: http://github.com/wordpress-mobile/gutenberg-mobile/
   RNSVG:
     :git: https://github.com/react-native-community/react-native-svg.git
     :tag: 8.0.8
   RNTAztecView:
-    :commit: 6ed662617a372db6413d36fd2100f67d16329a05
+    :commit: 558a5dd175a9617a17b00e614dbfd0de4135ccd3
     :git: https://github.com/wordpress-mobile/react-native-aztec.git
 
 SPEC CHECKSUMS:
