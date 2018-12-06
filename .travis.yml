@@ -15,3 +15,4 @@ install:
 script:
   - xcodebuild build-for-testing -scheme "WordPress" -configuration "Debug" -destination 'platform=iOS Simulator,name=iPhone XS,OS=12.1' -workspace "WordPress.xcworkspace" | bundle exec xcpretty -f `bundle exec xcpretty-travis-formatter`
   - xcodebuild test-without-building -scheme "WordPress" -configuration "Debug" -destination 'platform=iOS Simulator,name=iPhone XS,OS=12.1' -workspace "WordPress.xcworkspace" | bundle exec xcpretty -f `bundle exec xcpretty-travis-formatter`
+
