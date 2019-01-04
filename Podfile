@@ -105,7 +105,7 @@ target 'WordPress' do
 
     # When https://github.com/wordpress-mobile/gutenberg-mobile/pull/465 gets merged, uncomment L:106 and delete L:107
     # gutenberg_pod 'RNTAztecView'
-    pod 'RNTAztecView', :podspec => 'https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/4f42e3618f99ec8616bf40dee6cc254df5a024d0/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json'
+    pod 'RNTAztecView', :podspec => 'https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/0b973b598a39ea8b112e41495577beb2b413a1f5/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json'
 
     ## Third party libraries
     ## =====================

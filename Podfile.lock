@@ -241,7 +241,7 @@ DEPENDENCIES:
   - React (from `https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/develop/react-native-gutenberg-bridge/third-party-podspecs/React.podspec.json`)
   - react-native-safe-area (from `https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/develop/react-native-gutenberg-bridge/third-party-podspecs/react-native-safe-area.podspec.json`)
   - RNSVG (from `https://github.com/wordpress-mobile/react-native-svg.git`, tag `8.0.9-gb.0`)
-  - RNTAztecView (from `https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/4f42e3618f99ec8616bf40dee6cc254df5a024d0/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json`)
+  - RNTAztecView (from `https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/0b973b598a39ea8b112e41495577beb2b413a1f5/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json`)
   - SimulatorStatusMagic
   - Starscream (= 3.0.6)
   - SVProgressHUD (= 2.2.5)
@@ -315,7 +315,7 @@ EXTERNAL SOURCES:
     :git: https://github.com/wordpress-mobile/react-native-svg.git
     :tag: 8.0.9-gb.0
   RNTAztecView:
-    :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/4f42e3618f99ec8616bf40dee6cc254df5a024d0/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json
+    :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/0b973b598a39ea8b112e41495577beb2b413a1f5/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json
   yoga:
     :podspec: https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/develop/react-native-gutenberg-bridge/third-party-podspecs/yoga.podspec.json
 
@@ -326,15 +326,12 @@ CHECKOUT OPTIONS:
   Gutenberg:
     :commit: 7f156ec28aaa6ff69cc0660d7e11bbfea3b3526c
     :git: https://github.com/wordpress-mobile/gutenberg-mobile.git
-  react-native-safe-area:
-    :git: https://github.com/miyabi/react-native-safe-area.git
-    :tag: v0.5.0
   RNSVG:
     :git: https://github.com/wordpress-mobile/react-native-svg.git
     :tag: 8.0.9-gb.0
   RNTAztecView:
-    :commit: dd76294e94023b02311281a26d408c3258edb3f6
-    :git: https://github.com/wordpress-mobile/react-native-aztec.git
+    :commit: 0b973b598a39ea8b112e41495577beb2b413a1f5
+    :git: https://github.com/wordpress-mobile/gutenberg-mobile.git
 
 SPEC CHECKSUMS:
   1PasswordExtension: 0e95bdea64ec8ff2f4f693be5467a09fac42a83d
@@ -369,7 +366,7 @@ SPEC CHECKSUMS:
   React: 01aa04500b2957c2767e1dff9fe12e09444a467c
   react-native-safe-area: 7dc92953fce43bf36ab5ecae2fb4ffa2bda9a203
   RNSVG: 6d5813dd9c6a8e041e142abf1372faf012ce5759
-  RNTAztecView: 43f6e097e52f0fe079150400f823f2f0b70bdcc8
+  RNTAztecView: de025875d3797fa39695001cfd98a0ec30e28ea8
   SimulatorStatusMagic: 0c0e711acef6e70dd8a0710962347635a9cdef24
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
@@ -385,6 +382,6 @@ SPEC CHECKSUMS:
   yoga: f37b1edbd68be803f1dc4d57d40d8a5b277d8e2c
   ZendeskSDK: 44ee00338dd718495f0364369420ae11b389c878
 
-PODFILE CHECKSUM: 94f331bba3ff73461438d97ef723a99ac2f5e623
+PODFILE CHECKSUM: 5841e7845213887d32ee33548b222361b1f05bb8
 
 COCOAPODS: 1.5.3
