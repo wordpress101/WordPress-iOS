@@ -102,7 +102,10 @@ target 'WordPress' do
     gutenberg_pod 'Folly'
     gutenberg_pod 'react-native-safe-area'
     pod 'RNSVG', :git => 'https://github.com/wordpress-mobile/react-native-svg.git', :tag => '8.0.9-gb.0'
-    pod 'RNTAztecView', :git => 'https://github.com/wordpress-mobile/react-native-aztec.git', :tag => 'v0.1.3'
+
+    # When https://github.com/wordpress-mobile/gutenberg-mobile/pull/465 gets merged, uncomment L:106 and delete L:107
+    # gutenberg_pod 'RNTAztecView'
+    pod 'RNTAztecView', :podspec => 'https://raw.githubusercontent.com/wordpress-mobile/gutenberg-mobile/4f42e3618f99ec8616bf40dee6cc254df5a024d0/react-native-gutenberg-bridge/third-party-podspecs/RNTAztecView.podspec.json'
 
     ## Third party libraries
     ## =====================
