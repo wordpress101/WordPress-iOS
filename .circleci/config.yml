@@ -13,8 +13,8 @@ orbs:
                 REF="$CIRCLE_SHA1"
                 OUTPUT_DIRECTORY="$CIRCLE_PROJECT_REPONAME-$REF"
                 <<# checkout_merge >>
+                # Checkout merge if this is a PR
                 if [ -n "$CIRCLE_PULL_REQUEST" ] && [ "$CIRCLE_BRANCH" != "develop" ]; then
-                  # Checkout merge if this is a PR
                   PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
                   REF="pull/$PR_NUMBER/head"
                   OUTPUT_DIRECTORY="$CIRCLE_PROJECT_REPONAME-pull-$PR_NUMBER-head"
@@ -33,7 +33,8 @@ jobs:
     macos:
       xcode: "10.1.0"
     steps:
-      - my-orb/checkout
+      - my-orb/checkout:
+          checkout_merge: true
       - restore_cache:
           keys:
             - wordpress-ios-dependencies-{{ checksum "Gemfile.lock" }}-{{ checksum "Podfile.lock" }}
