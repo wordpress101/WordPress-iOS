@@ -11,21 +11,14 @@ orbs:
               name: Download Github Zip
               command: |
                 REF="$CIRCLE_SHA1"
-                OUTPUT_DIRECTORY="$CIRCLE_PROJECT_REPONAME-$REF"
-                <<# checkout_merge >>
+                <<# parameters.checkout_merge >>
                 # Checkout merge if this is a PR
                 if [ -n "$CIRCLE_PULL_REQUEST" ] && [ "$CIRCLE_BRANCH" != "develop" ]; then
                   PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
                   REF="pull/$PR_NUMBER/head"
-                  OUTPUT_DIRECTORY="$CIRCLE_PROJECT_REPONAME-pull-$PR_NUMBER-head"
                 fi
-                <</ checkout_merge >>
-                cd ~
-                # Expand ~ in working directory path path
-                WD="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}"
-                rm -rf "$WD"
-                curl -s#L "https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/archive/$REF.zip" | bsdtar -xvf-
-                mv "$OUTPUT_DIRECTORY" "$WD"
+                <</ parameters.checkout_merge >>
+                curl -s#L "https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/archive/$REF.zip" | tar -xzv --strip 1
 
 version: 2.1
 jobs:
