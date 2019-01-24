@@ -70,7 +70,7 @@ PODS:
   - HockeySDK (5.1.4):
     - HockeySDK/DefaultLib (= 5.1.4)
   - HockeySDK/DefaultLib (5.1.4)
-  - lottie-ios (2.5.2)
+  - lottie-ios (2.5.0)
   - MGSwipeTableCell (1.6.7)
   - MRProgress (0.8.3):
     - MRProgress/ActivityIndicator (= 0.8.3)
@@ -183,12 +183,14 @@ PODS:
     - CocoaLumberjack (= 3.4.2)
     - GoogleSignInRepacked (= 4.1.2)
     - Gridicons (~> 0.15)
-    - lottie-ios (= 2.5.2)
+    - lottie-ios (= 2.5.0)
     - "NSURL+IDN (= 0.3)"
     - SVProgressHUD (= 2.2.5)
-    - WordPressKit (~> 1.7.0-beta)
+    - UIDeviceIdentifier (~> 0.4)
+    - WordPressKit (~> 1.4)
     - WordPressShared (~> 1.4)
     - WordPressUI (~> 1.0)
+    - wpxmlrpc (~> 0.8)
   - WordPressKit (1.7.0-beta.4):
     - Alamofire (~> 4.7.3)
     - CocoaLumberjack (= 3.4.2)
@@ -228,7 +230,7 @@ DEPENDENCIES:
   - Gridicons (= 0.16)
   - Gutenberg (from `http://github.com/wordpress-mobile/gutenberg-mobile/`, commit `625bce184de38f81af9f43be8a314f10e4dca35a`)
   - HockeySDK (= 5.1.4)
-  - lottie-ios (= 2.5.2)
+  - lottie-ios (= 2.5.0)
   - MGSwipeTableCell (= 1.6.7)
   - MRProgress (= 0.8.3)
   - Nimble (~> 7.1.1)
@@ -248,7 +250,7 @@ DEPENDENCIES:
   - SVProgressHUD (= 2.2.5)
   - UIDeviceIdentifier (~> 0.4)
   - WordPress-Editor-iOS (= 1.4.1)
-  - WordPressAuthenticator (from `https://github.com/wordpress-mobile/WordPressAuthenticator-iOS.git`, commit `895563cdd426a1b6e72702cfa40f9595ea470b74`)
+  - WordPressAuthenticator (~> 1.1.8-beta.1)
   - WordPressKit (~> 1.7.0-beta)
   - WordPressShared (~> 1.6.1-beta.1)
   - WordPressUI (from `https://github.com/wordpress-mobile/WordPressUI-iOS.git`, tag `1.2.0`)
@@ -291,6 +293,7 @@ SPEC REPOS:
     - UIDeviceIdentifier
     - WordPress-Aztec-iOS
     - WordPress-Editor-iOS
+    - WordPressAuthenticator
     - WordPressKit
     - WordPressShared
     - WPMediaPicker
@@ -362,7 +365,7 @@ SPEC CHECKSUMS:
   Gridicons: 8cc5cb666d5ad8b8f1771d3c7a93d27ae25b7c2e
   Gutenberg: b2a732298f29b9e6b1aa8d49d1aab4a93a861f75
   HockeySDK: 15afe6bc0a5bfe3a531fd73dbf082095f37dac3b
-  lottie-ios: 3fef45d3fabe63e3c7c2eb603dd64ddfffc73062
+  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   MGSwipeTableCell: fb20e983988bde2b8d0df29c2d9e1d8ffd10b74a
   MRProgress: 16de7cc9f347e8846797a770db102a323fe7ef09
   Nimble: 2839b01d1b31f6a6a7777a221f0d91cf52e8e27b
@@ -382,7 +385,7 @@ SPEC CHECKSUMS:
   UIDeviceIdentifier: a959a6d4f51036b4180dd31fb26483a820f1cc46
   WordPress-Aztec-iOS: 383ea61afd3f96ef4d0c7e3f1ab8e7a362f5cd67
   WordPress-Editor-iOS: 617116ef6b454ff11eed2cbdeafc6cf78a54aec2
-  WordPressAuthenticator: 8db26bda6975c5f58d4fb36188a80ff434c9a90c
+  WordPressAuthenticator: afc3d4688f5ea45c91c694f1745bda3cdd4e7bae
   WordPressKit: 4acadbe3d833ea8e010a04799537c7fde1252e0a
   WordPressShared: c52ecb98864f4474c8c18d3ee20103ac3542f494
   WordPressUI: 44fe43a9c5c504dfd534286e39e1ce6ebcd69ff5

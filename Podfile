@@ -118,7 +118,7 @@ target 'WordPress' do
     pod 'Gifu', '3.2.0'
     pod 'GiphyCoreSDK', '~> 1.4.0'
     pod 'MGSwipeTableCell', '1.6.7'
-    pod 'lottie-ios', '2.5.2'
+    pod 'lottie-ios', '2.5.0'
     pod 'Starscream', '3.0.6'
     pod 'ZendeskSDK', '2.2.0'
 
@@ -135,7 +135,7 @@ target 'WordPress' do
 
     pod 'WordPressAuthenticator', '~> 1.1.8-beta.1'
     #pod 'WordPressAuthenticator', :path => '../WordPressAuthenticator-iOS'
-    #pod 'WordPressAuthenticator', :git => 'https://github.com/wordpress-mobile/WordPressAuthenticator-iOS.git' , :commit => '895563cdd426a1b6e72702cfa40f9595ea470b74'
+    #pod 'WordPressAuthenticator', :git => 'https://github.com/wordpress-mobile/WordPressAuthenticator-iOS.git' , :commit => '82900447393674532003833cc1f3a4ad1c53997f'
 
     aztec
     wordpress_ui
